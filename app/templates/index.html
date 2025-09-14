@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Search</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <h1>Flight Search</h1>
+    <form method="post">
+        <label>Source City:
+            <select name="source_city" id="source_city" required>
+                {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Destination City:
+            <select name="destination_city" id="destination_city" required>
+                {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Date of Journey:
+            <input type="date" name="journey_date" id="journey_date" required min="{{ today }}">
+        </label>
+        <label>No. of Persons:
+            <input type="number" name="persons" min="1" value="1" required>
+        </label>
+        <button type="submit">Search Flights</button>
+    </form>
+    <script>
+        // Set min date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementById('journey_date').setAttribute('min', today);
+        });
+        // Disable selected source city in destination dropdown
+        document.getElementById('source_city').addEventListener('change', function() {
+            var src = this.value;
+            var destSelect = document.getElementById('destination_city');
+            Array.from(destSelect.options).forEach(function(opt) {
+                opt.disabled = (opt.value === src);
+            });
+            // If current destination is same as source, reset
+            if (destSelect.value === src) destSelect.selectedIndex = 0;
+        });
+    </script>
+</body>
+
+</html>
